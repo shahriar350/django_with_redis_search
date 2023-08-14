@@ -17,10 +17,27 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+    SpectacularRedocView,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api-auth/", include("rest_framework.urls")),
+    path("api-auth", include("rest_framework.urls")),
+    # employee
+    path("api/v1/employees", include("users.rest.urls.employees")),
+    # category
+    path("api/v1/categories", include("users.rest.urls.categories")),
+    # Swagger
+    path("api/schema", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"
+    ),
+    path(
+        "api/docs/redoc", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
+    ),
 ]
 
 if settings.DEBUG:
